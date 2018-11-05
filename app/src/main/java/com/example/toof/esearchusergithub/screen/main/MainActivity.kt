@@ -5,16 +5,16 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.widget.Toast
 import com.example.toof.esearchusergithub.R
-import com.example.toof.esearchusergithub.data.model.User
+import com.example.toof.esearchusergithub.data.model.SearchResponse
 import com.example.toof.esearchusergithub.data.repository.UserRepository
 import com.example.toof.esearchusergithub.data.source.remote.UserRemoteDataSource
 import com.example.toof.esearchusergithub.utils.OnItemRecyclerViewClickListener
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), MainContract.View, OnItemRecyclerViewClickListener<User> {
+
+class MainActivity : AppCompatActivity(), MainContract.View, OnItemRecyclerViewClickListener<SearchResponse.User> {
 
     private lateinit var mAdapter: MainAdapter
     private lateinit var mPresenter: MainPresenter
@@ -39,15 +39,15 @@ class MainActivity : AppCompatActivity(), MainContract.View, OnItemRecyclerViewC
 
     }
 
-    override fun onGetDataSuccess(list: ArrayList<User>) {
-        mAdapter.updateData(list)
+    override fun onGetDataSuccess(result: SearchResponse.Result) {
+        mAdapter.updateData(result)
     }
 
-    override fun onError(e: Exception) {
-        Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show()
+    override fun onError(error: String) {
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
     }
 
-    override fun onItemClickListener(item: User) {
+    override fun onItemClickListener(item: SearchResponse.User) {
         val intent = Intent()
         intent.apply {
             action = Intent.ACTION_VIEW
@@ -56,5 +56,6 @@ class MainActivity : AppCompatActivity(), MainContract.View, OnItemRecyclerViewC
 
         startActivity(Intent.createChooser(intent, "Open the page at ..."))
     }
+
 
 }

@@ -9,46 +9,45 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.example.toof.esearchusergithub.R
-import com.example.toof.esearchusergithub.data.model.User
+import com.example.toof.esearchusergithub.data.model.SearchResponse
 import com.example.toof.esearchusergithub.utils.OnItemRecyclerViewClickListener
 
-class MainAdapter(context: Context, listener: OnItemRecyclerViewClickListener<User>) :
+class MainAdapter(context: Context, listener: OnItemRecyclerViewClickListener<SearchResponse.User>) :
     RecyclerView.Adapter<MainAdapter.ViewHolder>() {
 
     private val mContext = context
-    private val mList: ArrayList<User> = ArrayList()
-    private val mListener: OnItemRecyclerViewClickListener<User> = listener
+    private var mResult: SearchResponse.Result? = null
+    private val mListener: OnItemRecyclerViewClickListener<SearchResponse.User> = listener
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
         return ViewHolder(
             LayoutInflater.from(mContext).inflate(R.layout.item_user, p0, false),
-            mList,
+            mResult!!,
             mListener
         )
     }
 
     override fun getItemCount(): Int {
-        return mList.size
+        return if (mResult != null) mResult?.items?.size!! else 0
     }
 
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
-        p0.bindViewData(mList[p1])
+        mResult?.items?.get(p1)?.let { p0.bindViewData(it) }
     }
 
-    fun updateData(list: ArrayList<User>) {
-        mList.clear()
-        mList.addAll(list)
+    fun updateData(result: SearchResponse.Result) {
+        mResult = result
         notifyDataSetChanged()
     }
 
     class ViewHolder(
         view: View,
-        list: ArrayList<User>,
-        listener: OnItemRecyclerViewClickListener<User>
+        result: SearchResponse.Result,
+        listener: OnItemRecyclerViewClickListener<SearchResponse.User>
     ) : RecyclerView.ViewHolder(view), View.OnClickListener {
 
-        private val mList: ArrayList<User> = list
-        private val mListener: OnItemRecyclerViewClickListener<User> = listener
+        private val mResult: SearchResponse.Result = result
+        private val mListener: OnItemRecyclerViewClickListener<SearchResponse.User> = listener
         private val mImageView: ImageView = view.findViewById(R.id.image_view)
         private val mTextViewId: TextView = view.findViewById(R.id.text_id)
         private val mTextViewLogin: TextView = view.findViewById(R.id.text_login)
@@ -57,7 +56,7 @@ class MainAdapter(context: Context, listener: OnItemRecyclerViewClickListener<Us
             itemView.setOnClickListener(this)
         }
 
-        fun bindViewData(user: User) {
+        fun bindViewData(user: SearchResponse.User) {
             mTextViewId.text = user.id
             mTextViewLogin.text = user.login
             Glide.with(itemView)
@@ -66,7 +65,7 @@ class MainAdapter(context: Context, listener: OnItemRecyclerViewClickListener<Us
         }
 
         override fun onClick(v: View?) {
-            mListener.onItemClickListener(mList[adapterPosition])
+            mListener.onItemClickListener(mResult.items[adapterPosition])
         }
 
     }

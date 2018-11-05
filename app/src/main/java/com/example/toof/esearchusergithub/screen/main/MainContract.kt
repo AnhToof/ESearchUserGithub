@@ -1,14 +1,14 @@
 package com.example.toof.esearchusergithub.screen.main
 
-import com.example.toof.esearchusergithub.data.model.User
+import com.example.toof.esearchusergithub.data.model.SearchResponse
 import com.example.toof.esearchusergithub.utils.BasePresenter
 
 interface MainContract {
 
     interface View {
-        fun onGetDataSuccess(list: ArrayList<User>)
+        fun onGetDataSuccess(result: SearchResponse.Result)
 
-        fun onError(e: Exception)
+        fun onError(error: String)
     }
 
     interface Presenter : BasePresenter<View> {

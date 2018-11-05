@@ -2,7 +2,7 @@ package com.example.toof.esearchusergithub.data.source.remote
 
 interface OnFetchDataJsonListener<T> {
 
-    fun onSuccess(data: ArrayList<T>)
+    fun onSuccess(data: T)
 
-    fun onError(e: Exception)
+    fun onError(error: String)
 }
