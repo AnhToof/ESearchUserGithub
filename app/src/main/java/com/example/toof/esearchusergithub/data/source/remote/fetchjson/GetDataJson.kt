@@ -1,20 +1,18 @@
 package com.example.toof.esearchusergithub.data.source.remote.fetchjson
 
-import android.util.Log
 import com.example.toof.esearchusergithub.data.model.SearchResponse
 import com.example.toof.esearchusergithub.data.service.UserApiBuilder
 import com.example.toof.esearchusergithub.data.source.remote.OnFetchDataJsonListener
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 
 
 class GetDataJson(query: String, listener: OnFetchDataJsonListener<SearchResponse.Result>) {
 
     private val mListener: OnFetchDataJsonListener<SearchResponse.Result> = listener
     private val mQuery: String = query
-
-    fun getData() {
+    /*fun getData() {
         val userAPI = UserApiBuilder.getService()
         val call = userAPI.getSearchData(mQuery)
 
@@ -34,5 +32,20 @@ class GetDataJson(query: String, listener: OnFetchDataJsonListener<SearchRespons
 
         })
 
+    }*/
+
+    fun getData() {
+        disposable = getService.getSearchData(mQuery)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { result -> mListener.onSuccess(result) },
+                { error -> mListener.onError(error.toString()) }
+            )
+    }
+
+    companion object {
+        private val getService by lazy { UserApiBuilder.create() }
+        private var disposable: Disposable? = null
     }
 }
