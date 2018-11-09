@@ -9,6 +9,10 @@ interface MainContract {
         fun onGetDataSuccess(result: SearchResponse.Result)
 
         fun onError(error: String)
+
+        fun showLoading()
+
+        fun hideLoading()
     }
 
     interface Presenter : BasePresenter<View> {

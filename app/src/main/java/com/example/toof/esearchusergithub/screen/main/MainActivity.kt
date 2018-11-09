@@ -5,11 +5,11 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.view.View
 import android.widget.Toast
 import com.example.toof.esearchusergithub.R
 import com.example.toof.esearchusergithub.data.model.SearchResponse
 import com.example.toof.esearchusergithub.data.repository.UserRepository
-import com.example.toof.esearchusergithub.data.source.remote.UserRemoteDataSource
 import com.example.toof.esearchusergithub.utils.OnItemRecyclerViewClickListener
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -28,8 +28,7 @@ class MainActivity : AppCompatActivity(), MainContract.View, OnItemRecyclerViewC
             adapter = mAdapter
         }
 
-        val remoteDataSource = UserRemoteDataSource()
-        val repository = UserRepository(remoteDataSource)
+        val repository = UserRepository()
         mPresenter = MainPresenter(repository)
         mPresenter.setView(this)
 
@@ -45,6 +44,24 @@ class MainActivity : AppCompatActivity(), MainContract.View, OnItemRecyclerViewC
 
     override fun onError(error: String) {
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun showLoading() {
+        progressBar.visibility = View.VISIBLE
+    }
+
+    override fun hideLoading() {
+        progressBar.visibility = View.GONE
+    }
+
+    override fun onStart() {
+        mPresenter.onStart()
+        super.onStart()
+    }
+
+    override fun onStop() {
+        mPresenter.onStop()
+        super.onStop()
     }
 
     override fun onItemClickListener(item: SearchResponse.User) {
