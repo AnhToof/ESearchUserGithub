@@ -40,7 +40,7 @@ class GetDataJson(query: String, listener: OnFetchDataJsonListener<SearchRespons
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { result -> mListener.onSuccess(result) },
-                { error -> mListener.onError(error.toString()) }
+                { mListener.onError("Network error") }
             )
     }
 
